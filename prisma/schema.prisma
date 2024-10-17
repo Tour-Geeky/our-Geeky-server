@@ -1,0 +1,71 @@
+// prisma/schema.prisma
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Product {
+  id              Int               @id @default(autoincrement())
+  title           String
+  category        String
+  price           Float
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  media           Media[]
+  bookings        Booking[]
+  specialOffers   SpecialOffer[]
+  availabilities   Availability[]
+}
+
+model Media {
+  id        Int      @id @default(autoincrement())
+  url       String
+  productId Int
+  product   Product  @relation(fields: [productId], references: [id])
+}
+
+model Booking {
+  id          Int       @id @default(autoincrement())
+  product     Product   @relation(fields: [productId], references: [id])
+  productId   Int
+  customer    Customer  @relation(fields: [customerId], references: [id])
+  customerId  Int
+  bookingDate DateTime
+  status      String
+}
+
+model Customer {
+  id          Int       @id @default(autoincrement())
+  name        String
+  email       String    @unique
+  phone       String
+  bookings    Booking[]
+}
+
+model SpecialOffer {
+  id          Int       @id @default(autoincrement())
+  product     Product   @relation(fields: [productId], references: [id])
+  productId   Int
+  discount    Float
+  startDate   DateTime
+  endDate     DateTime
+}
+
+model FinanceReport {
+  id        Int      @id @default(autoincrement())
+  earnings  Float
+  expenses  Float
+  createdAt DateTime @default(now())
+}
+
+model Availability {
+  id        Int      @id @default(autoincrement())
+  date      DateTime
+  product   Product  @relation(fields: [productId], references: [id])
+  productId Int
+}
