@@ -1,6 +1,7 @@
 import express, { Application, Request, Response } from "express";
 import { PrismaClient } from '@prisma/client';
 import cors from "cors";
+import { ProductRoutes } from "./modules/product/productRoute";
 
 const app: Application = express();
 const prisma = new PrismaClient();
@@ -12,8 +13,10 @@ const port = 3013;
 
 app.use(express.json());
 
+app.use("/api", ProductRoutes);
+
 app.get("/", (req: Request, res: Response) => {
-    res.send("Hello World!");
+    res.send("welcome to travella server side");
   });
   
   // Not Found Route Handler
